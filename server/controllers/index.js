@@ -1,3 +1,4 @@
 module.exports = {
-    workoutController: require("./workoutcontroller"),
+ workoutController: require("./workoutController"),
+ userController: require("./userController")
 }
