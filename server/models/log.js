@@ -15,7 +15,8 @@ const workOut = db.define('workout', {
         allowNull: false
     },
     owner: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 })
 

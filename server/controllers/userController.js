@@ -4,19 +4,19 @@ const { UserModel } = require("../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs")
 
-router.post("/register", async (req, res) =>{
-    let { email, password } = req.body.user;
+router.post('/register', async (req, res) =>{
+    const {email, password } = req.body;
     try {
  const User =  await UserModel.create({
             email,
             password: bcrypt.hashSync(password, 13),
         });
-        let token = jwt.sign({id: User.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
+        const token = jwt.sign({id: User.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
 
     res.status(201).json({ 
         msg: "User successfully registered",
         user: User,
-        sessionToken: token
+         token
     });
 } catch (err) {
     if(err instanceof UniqueConstraintError) {
@@ -25,13 +25,13 @@ router.post("/register", async (req, res) =>{
         });
     }else {
     res.status(500).json({
-        msg: "Failed to register user",
+        error: `Failed to register user: ${err}`,
     });
     }
 }
 })
-router.post("/login", async (req, res) => {
-    let { email, password } = req.body.user;
+router.post('/login', async (req, res) => {
+    let { email, password } = req.body;
 
     try {
       let loginUser =  await UserModel.findOne({
@@ -45,8 +45,8 @@ router.post("/login", async (req, res) => {
         let token = jwt.sign({id: User.id}, process.env.JWT_SECRET, {expiresIn: 60*60* 24});
     res.status(200).json({
         user: loginUser,
-        msg: "User successfully logged in!",
-        sessionToken: token
+        msg: `User successfully logged in!`,
+        token
     });
 } else {
     res.status(401).json({
@@ -64,7 +64,7 @@ router.post("/login", async (req, res) => {
         msg: "Failed to log user in"
     })
 }
-})
+});
 
 
 
