@@ -1,5 +1,7 @@
-const Sequelize = require('sequelize');
+require('dotenv').config();
 
-const sequelize = new Sequelize("postgres://postgres:Aliyah&Nathan@localhost:5432/workout");
+const {Sequelize} = require('sequelize');
 
-module.exports = sequelize;
+const db = new Sequelize(process.env.DB_CONNECTION_STRING)
+
+module.exports = db;

@@ -3,7 +3,7 @@ const router = require('express').Router();
 const middleware = require("../middleware");
 const {LogModel} = require('../models')
 
-router.get('/', async (req,res) => {
+router.get('/all', async (req,res) => {
     try {
         const entries = await LogModel.findAll();
         res.status(200).json(entries);
@@ -12,20 +12,22 @@ router.get('/', async (req,res) => {
     }
 })
 router.post('/', middleware.validateSession, async (req, res) => {
-    const {description,definition,result} = req.body
-    // const logEntry = {
-    //     definition,
-    //     description,
-    //     result,
-    //     owner: id
-    // }
+    const {description,definition,result} = req.body;
+    const {id} =req.user
+    const logEntry = {
+        definition,
+        description,
+        result,
+        owner_id: id
+    }
     try {
-        const newLog = await LogModel.create({ description, definition, result})
+        const newLog = await LogModel.create( logEntry)
 
-        res.status(200).json({msg: `Workout complete!`})
+        res.status(200).json({msg: `Workout complete!`, newLog})
     } catch (err) {
         res.status(500).json({msg: `Failed workoutsheet: ${err}`});
     }
+   // LogModel.create(logEntry)
 });
 router.put('/:id', middleware.validateSession, async(req, res) => {
     const {description, definition, result} = req.body
@@ -43,6 +45,7 @@ router.put('/:id', middleware.validateSession, async(req, res) => {
             msg: `Failed to update workout log: ${err}`
         })
     }
+    
 })
 router.delete('/:id', middleware.validateSession, async (req, res) => {
     try {

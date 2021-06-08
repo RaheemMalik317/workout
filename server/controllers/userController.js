@@ -11,12 +11,12 @@ router.post('/register', async (req, res) =>{
             email,
             password: bcrypt.hashSync(password, 13),
         });
-        const token = jwt.sign({id: User.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
+        const token = jwt.sign({id: User.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 168});
 
     res.status(201).json({ 
         msg: "User successfully registered",
         user: User,
-         token
+         sessionToken: token
     });
 } catch (err) {
     if(err instanceof UniqueConstraintError) {
@@ -36,13 +36,13 @@ router.post('/login', async (req, res) => {
     try {
       let loginUser =  await UserModel.findOne({
         where: {
-            email: email,
+            email: email
         },
     });
     if (loginUser) {
         let passwordComparison = await bcrypt.compare(password, loginUser.password);
         if (passwordComparison) {
-        let token = jwt.sign({id: User.id}, process.env.JWT_SECRET, {expiresIn: 60*60* 24});
+        let token = jwt.sign({id: loginUser.id}, process.env.JWT_SECRET, {expiresIn: 60*60* 168});
     res.status(200).json({
         user: loginUser,
         msg: `User successfully logged in!`,

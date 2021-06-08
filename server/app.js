@@ -1,4 +1,4 @@
-require("dotenv").config();
+require('dotenv').config();
 const Express = require('express');
 const app = Express();
 app.use(Express.json());
@@ -15,9 +15,11 @@ app.use("/workout", controllers.workoutController);
 
 
 dbConnection.authenticate()
-.then(() => dbConnection.sync())
+.then(() => dbConnection.sync(
+    // {force: true}
+))
 .then(() => {
-    app.listen(3000, () => {
+    app.listen(process.env.PORT, () => {
         console.log(`[Server]: App is listening indeed.`);
     });   
 })

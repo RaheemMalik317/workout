@@ -2,6 +2,10 @@ const { DataTypes } = require('sequelize');
 const db = require('../db');
 
 const workOut = db.define('workout', {
+    owner_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     description: {
         type: DataTypes.STRING,
         allowNull: false
@@ -13,11 +17,8 @@ const workOut = db.define('workout', {
     result: {
         type: DataTypes.STRING,
         allowNull: false
-    },
-    owner: {
-        type: DataTypes.INTEGER,
-        allowNull: false
     }
+    
 })
 
 module.exports = workOut;
